@@ -11,7 +11,9 @@
 		{% endif %}
 		<h1 style="color: deeppink"> Hello, {{ request.user }}</h1>
 		<h3><a href="{% url 'logout' %}">Log Out</a></h3>
+		{% if request.user.is_superuser %}
 		<h3><a href="{% url 'create_requisitions' %}">Create Requisition</a><br></h3>
+		{% endif %}
 		{% for requisitions in requisitions_list %}
 			{% if requisitions.recovery is not True %}
 				<p class="requisitions_style">{{ requisitions }}</p>

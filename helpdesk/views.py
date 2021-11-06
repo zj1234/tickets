@@ -43,10 +43,12 @@ class RequisitionsView(ListView):
     template_name = 'index.html'
 
     def get_queryset(self):
-        if self.request.user.is_authenticated:
-            if not self.request.user.is_superuser:
-                return Requisitions.objects.filter(user=self.request.user)
+        if self.request.user.is_authenticated and not self.request.user.is_superuser:
             return Requisitions.objects.all().filter(active_status=True)
+            # Requisitions.objects.filter(user=self.request.user)
+            # if not self.request.user.is_superuser:
+            #     return Requisitions.objects.filter(user=self.request.user)
+            # return Requisitions.objects.all().filter(active_status=True)
 
 
 class RequisitionsListView(ListView):

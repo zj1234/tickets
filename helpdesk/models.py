@@ -9,6 +9,7 @@ STATUS_CHOICE = (('low', 'low'),
 
 
 class Requisitions(models.Model):
+    id=models.IntegerField(primary_key=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     status = models.CharField(choices=STATUS_CHOICE, max_length=6)
     title = models.CharField(max_length=50)
@@ -16,9 +17,10 @@ class Requisitions(models.Model):
     active_status = models.BooleanField(default=True)
     review = models.BooleanField(null=True, blank=True)
     recovery = models.BooleanField(null=True, blank=True)
+    creationDate=models.DateTimeField(default=timezone.now)
 
     def __str__(self):
-        return f'{self.status} ✔ {self.user} ✔ {self.title} ✔ {self.text} 	|Active:{self.active_status} |Accepted:{self.review}'
+        return f'{self.id}  ✔ {self.user} ✔ {self.title} ✔ {self.text}  ✔{self.status} ✔{self.creationDate} 	|Active:{self.active_status} |Accepted:{self.review}'
 
 
 class Comment(models.Model):

@@ -19,8 +19,9 @@ class Requisitions(models.Model):
     recovery = models.BooleanField(null=True, blank=True)
     creationDate=models.DateTimeField(default=timezone.now)
 
-    def __str__(self):
-        return f'{self.id}  ✔ {self.user} ✔ {self.title} ✔ {self.text}  ✔{self.status} ✔{self.creationDate} 	|Active:{self.active_status} |Accepted:{self.review}'
+    def __list__(self):
+        return [{self.id},{self.user}, {self.title}, {self.text},{self.status},{self.creationDate}]
+        # |Active:{self.active_status} |Accepted:{self.review}'
 
 
 class Comment(models.Model):

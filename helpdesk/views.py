@@ -9,6 +9,10 @@ from django.contrib.auth import authenticate, login
 from .forms import RequisitionsCreateForm, RequisitionsUpdateForm, AcceptRequisitionsForm, CommentForm, \
     CancelRequisitionsForm, RecoveryRequisitionsForm
 from django.contrib.auth.models import User
+from django.db.models import Q
+from django.views.decorators.cache import cache_page
+from django.utils.decorators import method_decorator
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.mixins import PermissionRequiredMixin, UserPassesTestMixin
 
@@ -25,6 +29,7 @@ class MyLoginView(LoginView):
     form_class = AuthenticationForm
     success_url = reverse_lazy('index')
 
+    @login_required
     def get_success_url(self):
         return self.success_url
 
@@ -37,14 +42,29 @@ class UserPermission(UserPassesTestMixin):
     def test_func(self):
         return self.request.user == self.get_object().user
 
-
+@method_decorator(cache_page(10 * 5), name='dispatch')
 class RequisitionsView(ListView):
     model = Requisitions
     template_name = 'index.html'
-
+    
+    
     def get_queryset(self):
-        if self.request.user.is_authenticated and not self.request.user.is_superuser:
-            return Requisitions.objects.all().filter(active_status=True)
+        if self.request.user.is_authenticated:
+            _query=Requisitions.objects.all().filter(active_status=True).values()
+            if self.request.method=="GET":
+                query=self.request.GET.get("search_box", None)
+                if query:
+                    qset = (
+                        Q(id__icontains=query) |
+                        Q(status__icontains=query) |
+                        Q(title__icontains=query)|
+                        Q(text__icontains=query)
+                    )
+                    return _query.filter(qset).distinct()
+                else:
+                    return _query
+            else:           
+                return _query
             # Requisitions.objects.filter(user=self.request.user)
             # if not self.request.user.is_superuser:
             #     return Requisitions.objects.filter(user=self.request.user)

@@ -1,49 +1,60 @@
 {% extends 'base.html' %}
 {% block content %}
-{% if messages %}
-{% for message in messages %}
-	<h2 style="color: crimson;">{{ message|safe }}</h2>
-{% endfor %}
-{% endif %}
 	{% if request.user.is_authenticated %}
-		{% if request.user.is_superuser %}
+		<!-- {% if request.user.is_superuser %}
 		<h2><a href="{% url 'admin_requisitions_recovery' %}">Restore</a></h2>
-		{% endif %}
-		<h1 style="color: deeppink"> Hello, {{ request.user }}</h1>
-		<h3><a href="{% url 'logout' %}">Log Out</a></h3>
+		{% endif %} -->
+		<nav class="navbar navbar-expand-lg navbar-light bg-light">
+			<a class="navbar-brand" href="#">Tickets</a>
+			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup"
+				aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+			<div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+				<div class="navbar-nav">
+					<a class="nav-item nav-link active" href="#">Home <span class="sr-only">Hola, {{ request.user }}</span></a>
+					<a class="nav-item nav-link" href="{% url 'logout' %}">Salir</a>
+				</div>
+			</div>
+		</nav>
+		<form type="get" action="." style="margin: 0">
+			<input  id="search_box" type="text" name="search_box"  placeholder="Buscar..." >
+			<button id="search_submit" type="submit" >Buscar</button>
+			<button id="clean" type="clean" >Limpiar</button>
+		</form>
+
 		{% if request.user.is_superuser %}
-		<h3><a href="{% url 'create_requisitions' %}">Create Requisition</a><br></h3>
+		<h3><a href="{% url 'create_requisitions' %}">Crear Ticket</a><br></h3>
 		{% endif %}
-		{% for requisitions in requisitions_list %}
-			{% if requisitions.recovery is not True %}
-				<p class="requisitions_style">{{ requisitions }}</p>
-			<a href="{% url 'requisitions_update' requisitions.pk %}">Change Requisition</a><br>
-			<a href="{% url 'comments' requisitions.pk %}">Add Comment</a><br>
-			{% if requisitions.comment_requisitions.all %}
-				<p class="requisitions_comment_style">{{requisitions.comment_requisitions.all}}</p>
-			{% endif %}
-			{% if request.user.is_superuser %}
-				<form method="post" action="{% url 'requisitions_accept' requisitions.pk %}">
-				{% csrf_token %}
-				<input type="submit" value="Accept">
-				</form>
-				<form method="post" action="{% url 'requisitions_cancel' requisitions.pk %}">
-				{% csrf_token %}
-				<input type="submit" value="Cancel">
-				</form>
-			{% else %}
-			    {% if requisitions.review is False %}
-					<form method="post" action="{% url 'requisitions_recovery' requisitions.pk %}">
-					{% csrf_token %}
-					<input type="submit" value="Restore">
-					</form>
-				{% endif %}
-			{% endif %}
-			{% endif %}
-		{% endfor %}
+		<table class="table table-striped">
+			<thead>
+				<tr>
+					<th>id</th>
+					<th>Estado</th>
+					<th>Titulo</th>
+					<th>Descripcion</th>
+					<th>Fecha Creacion</th>
+				</tr>
+			</thead>
+			<tbody>
+				{% for requisitions in requisitions_list %}
+					<tr>
+						<td>{{ requisitions.id }}</td>
+						<td>{{ requisitions.status }}</td>
+						<td>{{ requisitions.title }}</td>
+						<td>{{ requisitions.text }}</td>
+						<td>{{ requisitions.creationDate }}</td>
+					</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+			
 	{% else %}
-		<h2><a href="{% url 'registration' %}">Registration</a></h2>
-		<h2><a href="{% url 'login' %}">Sign In</a></h2>
+	<div class="indexTable">
+		<div><h1>Tickets</h1></div>
+		<div><a href="{% url 'registration' %}"><h3>Regitrarse</h3></a></div>
+		<div><a href="{% url 'login' %}"><h3>login</h3></a></div>
+	</div>
 	{% endif %}
 
 {% endblock %}

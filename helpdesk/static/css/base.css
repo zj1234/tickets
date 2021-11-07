@@ -1,0 +1,33 @@
+body {
+    background-color: #b3e5fc;
+}
+
+.indexTable {
+    text-align: center;
+}
+
+h1{
+    color:#a1887f
+}
+nav{
+    background-color:#fff9c4;
+    padding:15px
+}
+nav a {
+    font-size: 24px;
+}
+.nav-item nav-link{
+    padding-left: 800px;
+}
+table{
+    width: 100%;
+    padding: 40px;
+}
+tr{
+    text-align: right;
+}
+.create{
+    display: grid;
+    width: 80%;
+    padding: 80px;
+}

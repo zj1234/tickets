@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+{% load static %}
+
+<!-- CSS Custom File -->
+<link href="{% static 'css/homepage.css' %}" rel="stylesheet">
+{% block content %}
+<!-- {% if messages %}
+{% for message in messages %}
+	<h2 style="color: crimson;">{{ message|safe }}</h2>
+{% endfor %}
+{% endif %} -->
+	{% if request.user.is_authenticated %}
+		<!-- {% if request.user.is_superuser %}
+		<h2><a href="{% url 'admin_requisitions_recovery' %}">Restore</a></h2>
+		{% endif %} -->
+		<nav class="navbar navbar-expand-lg navbar-light bg-light">
+			<a class="navbar-brand" href="#">Tickets</a>
+			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup"
+				aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+			<div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+				<div class="navbar-nav">
+					<a class="nav-item nav-link active" href="#">Home <span class="sr-only">Hola, {{ request.user }}</span></a>
+					<a class="nav-item nav-link" href="{% url 'logout' %}">Salir</a>
+				</div>
+			</div>
+		</nav>
+
+		
+		<!-- <h1 style="color: deeppink"> </h1>
+		<h3><a href="{% url 'logout' %}">Salir</a></h3> -->
+		{% if request.user.is_superuser %}
+		<h3><a href="{% url 'create_requisitions' %}">Crear Ticket</a><br></h3>
+		{% endif %}
+		
+		{% for requisitions in requisitions_list %}
+			{% if requisitions.recovery is not True %}
+				<p class="requisitions_style">{{ requisitions }}</p>
+			<!-- <a href="{% url 'requisitions_update' requisitions.pk %}">Cambiar Ticket</a><br>
+			<a href="{% url 'comments' requisitions.pk %}">Añade Comentario</a><br> -->
+			<!-- {% if requisitions.comment_requisitions.all %}
+				{% for comments in requisitions.comment_requisitions.all %}
+					<p class="requisitions_comment_style">{{comments}}</p>
+				{% endfor %}
+			{% endif %} -->
+			<!-- {% if request.user.is_superuser %}
+				<form method="post" action="{% url 'requisitions_accept' requisitions.pk %}">
+				{% csrf_token %}
+				<input type="submit" value="Accept">
+				</form>
+				<form method="post" action="{% url 'requisitions_cancel' requisitions.pk %}">
+				{% csrf_token %}
+				<input type="submit" value="Cancel">
+				</form>
+			{% else %} -->
+			    <!-- {% if requisitions.review is False %}
+					<form method="post" action="{% url 'requisitions_recovery' requisitions.pk %}">
+					{% csrf_token %}
+					<input type="submit" value="Restore">
+					</form>
+				{% endif %}
+			{% endif %}-->
+			{% endif %} 
+		{% endfor %}
+	{% else %}
+		<h2><a href="{% url 'registration' %}">Regitrarse</a></h2>
+		<h2><a href="{% url 'login' %}">login</a></h2>
+	{% endif %}
+
+{% endblock %}

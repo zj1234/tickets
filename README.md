@@ -1,6 +1,5 @@
 Application
-Welcome to testAPi - An open API for testing Perez y Perez.
-
+Welcome to Ticket- An open API for testing Tickets
 Requirements
 
 *python>3.6
